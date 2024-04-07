@@ -55,4 +55,81 @@ public partial class BotPlayerController : CharacterBody3D
 			cameraPivot.RotationDegrees = rotDeg;
 		}
 	}
+	
+	public override void _PhysicsProcess(double delta)
+	{
+		HandleMovement(delta);
+	}
+	
+	public async void HandleMovement(double delta)
+	{
+		Vector3 direction = new Vector3(0, 0, 0);
+		if(Input.IsActionPressed("move_up"))
+		{
+			direction += Transform.Basis.Z;
+		}
+		if(Input.IsActionPressed("move_down"))
+		{
+			direction -= Transform.Basis.Z;
+		}
+		if(Input.IsActionPressed("move_left"))
+		{
+			direction += Transform.Basis.X;
+		}
+		if(Input.IsActionPressed("move_right"))
+		{
+			direction -= Transform.Basis.X;
+		}
+		
+		// Permet d'avoir la même vitesse même si on appuie sur deux directions
+		direction = direction.Normalized(); 
+		
+		float accel = IsOnFloor() ? acceleration : airAcceleration;
+		velocity = direction * speed * accel;
+		
+		if(bounce)
+		{
+			yVelocity = jumpForce;
+			bounce = false;
+		}
+		else
+		{
+			if(IsOnFloor())
+			{
+				yVelocity = -0.01f; // Pas besoin d'être attiré au sol car le personnage est déjà sur le sol
+			}
+			else
+			{
+				yVelocity = Mathf.Clamp(yVelocity - gravity, -maxTerminalVelocity, maxTerminalVelocity);
+				animationPlayer.Play("fall");
+			}
+		}
+		
+		if(Input.IsActionJustPressed("jump") && IsOnFloor())
+		{
+			yVelocity = jumpForce;
+		}
+		
+		velocity.Y = yVelocity;
+		Velocity = velocity;
+		MoveAndSlide();
+		
+		// Permet de savoir avec quoi le personnage entre en collision
+		/*
+		for(int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			var collision = GetSlideCollision(i);
+			//GD.Print("Collision avec ", ((Node)collision.GetCollider()).Name);
+		}
+		*/
+		
+		if(direction != new Vector3(0,0,0) && IsOnFloor())
+		{
+			animationPlayer.Play("walk");
+		}
+		if(direction == new Vector3(0,0,0) && IsOnFloor())
+		{
+			animationPlayer.Play("Idle");
+		}
+	}
 }
