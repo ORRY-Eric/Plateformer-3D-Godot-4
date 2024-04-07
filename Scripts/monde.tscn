@@ -1,0 +1,83 @@
+[gd_scene load_steps=15 format=3 uid="uid://6mhow8n5fn02"]
+
+[ext_resource type="Environment" uid="uid://771pfgenq1ho" path="res://Assets/monde_env.tres" id="1_5m6p8"]
+[ext_resource type="PackedScene" uid="uid://dt5s3jfcc711m" path="res://Prefabs/level.tscn" id="1_tk8ik"]
+[ext_resource type="Material" uid="uid://d2lqhxyc4dtw0" path="res://Assets/outdoor_environment/water.tres" id="3_28wmo"]
+[ext_resource type="PackedScene" uid="uid://c28pgdu71100y" path="res://Assets/outdoor_environment/tree_trunk/tree_trunk_long.glb" id="4_jl7f6"]
+[ext_resource type="Material" path="res://Assets/outdoor_environment/materials/dark_bark/dark_bark.tres" id="5_vutng"]
+[ext_resource type="Material" uid="uid://cbwea5kec68u6" path="res://Assets/outdoor_environment/materials/trunk_top/trunk_top.tres" id="6_q6rq2"]
+[ext_resource type="PackedScene" uid="uid://dx8qkjcbt8emp" path="res://Assets/outdoor_environment/grass/GrassChunk.tscn" id="7_nxyq2"]
+[ext_resource type="PackedScene" uid="uid://bml43isuesy1m" path="res://Assets/outdoor_environment/trees/tree.tscn" id="8_ntsgj"]
+[ext_resource type="PackedScene" uid="uid://b8i4firrk6lm6" path="res://Assets/kenneyassets/mushrooms.glb" id="9_0xdk0"]
+[ext_resource type="PackedScene" uid="uid://c8g1ibhiv3t08" path="res://Assets/kenneyassets/rocks.glb" id="10_j7q7g"]
+[ext_resource type="PackedScene" uid="uid://cuhsc02r8ovcg" path="res://Assets/kenneyassets/stones.glb" id="11_w6ror"]
+[ext_resource type="PackedScene" uid="uid://bhlc1icn3wtlt" path="res://Prefabs/Bot_Player_Ctrl.tscn" id="12_uiee4"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qyjuu"]
+size = Vector2(400, 400)
+subdivide_width = 40
+subdivide_depth = 40
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_mrggl"]
+points = PackedVector3Array(-0.0723286, -0.376381, 1.8105, -0.894619, 2.6967, -0.500284, -1.66647, -0.482896, 0.428893, 0.968455, 2.60147, 0.31614, -0.779523, 2.66472, 0.668601, 1.36231, -0.482896, -1.0582, 0.632525, 2.6266, -0.795367, -0.429284, -0.454923, -0.892768, 0.29945, -0.535821, 1.59797, 0.399371, 2.59208, 0.935741, -0.226544, 2.54569, -0.973976, 0.724593, -0.589079, -1.27074, -1.56003, -0.376381, 0.853957, -1.34746, -0.642004, 0.269729, 0.936801, -0.461273, 0.31782, 1.0433, -0.482896, -1.37716, -0.0772281, 2.6534, 1.01428, 1.14974, -0.642004, -0.792617, 0.978984, 2.61598, -0.285919, -0.998461, 2.60542, 0.120362, -0.725084, -0.437356, -0.680191, 0.193312, -0.376381, 1.75745, 0.125117, 2.5704, -0.993758, -1.34746, -0.535821, 0.907011, -0.422032, 2.53087, -0.912788, 1.30894, -0.535821, -0.739562, -1.66647, -0.323456, 0.694792, 0.686529, 2.59121, 0.743636, 1.02865, 2.61489, -0.0344464, 1.24735, -0.366926, -1.20803, -0.998077, 2.60472, -0.121542, 0.777662, -0.642004, -1.16463)
+
+[node name="Monde" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_5m6p8")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.905114, -0.216937, 0.36566, -0.239689, 0.449989, 0.860267, -0.351166, -0.866284, 0.355294, 0, 0, 0)
+light_color = Color(0.956863, 0.8, 0.733333, 1)
+shadow_enabled = true
+shadow_bias = 0.02
+shadow_normal_bias = 1.6
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+material_override = ExtResource("3_28wmo")
+mesh = SubResource("PlaneMesh_qyjuu")
+
+[node name="Level" parent="." instance=ExtResource("1_tk8ik")]
+
+[node name="Vegetation" type="Node3D" parent="."]
+
+[node name="tree_trunk_long" parent="Vegetation" instance=ExtResource("4_jl7f6")]
+transform = Transform3D(1.40515, 0, 0, 0, 1.53426, 0, 0, 0, 1.33999, 39.419, 11.9448, -28.6144)
+
+[node name="long_trunk" parent="Vegetation/tree_trunk_long" index="0"]
+surface_material_override/0 = ExtResource("5_vutng")
+surface_material_override/1 = ExtResource("6_q6rq2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Vegetation/tree_trunk_long"]
+shape = SubResource("ConvexPolygonShape3D_mrggl")
+
+[node name="grass_chunk_scene" parent="Vegetation" instance=ExtResource("7_nxyq2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.8397, 5.80568, -15.4858)
+skeleton = NodePath("../..")
+
+[node name="Tree1Geo" parent="Vegetation" instance=ExtResource("8_ntsgj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100.295, 7.70139, 33.1343)
+skeleton = NodePath("../..")
+
+[node name="Tree1Geo2" parent="Vegetation" instance=ExtResource("8_ntsgj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103.353, 7.70139, 33.5759)
+skeleton = NodePath("../..")
+
+[node name="Tree1Geo3" parent="Vegetation" instance=ExtResource("8_ntsgj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -106.189, 7.70139, 34.3892)
+skeleton = NodePath("../..")
+
+[node name="mushrooms2" parent="Vegetation" instance=ExtResource("9_0xdk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.3338, 5.71781, -8.45452)
+
+[node name="rocks2" parent="Vegetation" instance=ExtResource("10_j7q7g")]
+transform = Transform3D(28.1142, 0, -73.0532, 0, 78.2763, 0, 73.0532, 0, 28.1142, -67.9318, -1, -103.996)
+
+[node name="stones2" parent="Vegetation" instance=ExtResource("11_w6ror")]
+transform = Transform3D(7.23329, 0, 0, 0, 7.23329, 0, 0, 0, 7.23329, -82.9285, 5.51339, 5.5688)
+
+[node name="PlayerBotCtrl" parent="." instance=ExtResource("12_uiee4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5086, 1.91698, -8.69321)
+
+[editable path="Vegetation/tree_trunk_long"]
